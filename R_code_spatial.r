@@ -66,6 +66,28 @@ library(ggplot2) # require(ggplot2)
 
 # save the .RData under the menu File
 
+# load the previously saved .RData
+
+# setting the working directory: lab 
+setwd("C:/lab/")
+load("spatial.RData")
+# let's see if the file was uploaded correctly, ls is a list of objects
+ls()
+# covid
+
+library(ggplot2) #require(ggplot2)
+
+data(mpg)
+head(mpg)
+#key components: data, aes, geometry 
+ggplot(mpg, aes(x=displ, y=hwy)) + geom_point()
+
+# change the geom
+ggplot(mpg, aes(x=displ, y=hwy)) + geom_line()
+ggplot(mpg, aes(x=displ, y=hwy)) + geom_polygon()
+
+head(covid)
+ggplot(covid, aes(x=lon, y=lat, size=cases)) + geom_point() #size to show the points with higher size with higher number of cases
 
 
 
