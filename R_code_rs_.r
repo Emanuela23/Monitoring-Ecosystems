@@ -1,8 +1,11 @@
-# recupera lezione
-
-# R code for RS
+# R code for Remote sensing analysis 
 
 # install.packages("raster")
+install.packages("RStoolbox")
+
+# let's install faster 
+# install.packages(c("raster","RStoolbox"))
+
 library(raster)
 
 setwd("~/lab/")
