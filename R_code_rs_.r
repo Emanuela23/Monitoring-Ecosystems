@@ -100,10 +100,26 @@ plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="hist")
 
 dvi2011 <- p224r63_2011$B4_sre - p224r63_2011$B3_sre
 cl <- colorRampPalette(c("darkorchid3","light blue","lightpink4"))(100)
-plot(dvi2011)
+plot(dvi2011,col=cl)
 
-##################################23
+#Exercise: dvi for 1988
 dvi1988 <- p224r63_1988$B4_sre - p224r63_1988$B3_sre
+cl <- colorRampPalette(c("darkorchid3","light blue","lightpink4"))(100)
+plot(dvi1988,col=cl)
+
+# difference from 1988 to 2011
+diff <- dvi2011 - dvi1988
+plot(diff)
+
+# changing the grain
+# resampling
+p224r63_2011res <- aggregate(p224r63_2011, fact=10)
+p224r63_2011res100 <- aggregate(p224r63_2011, fact=100)
+par(mfrow=c(3,1))
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="Lin")
+
+
 
 # DVI for the two years: compare with a difference in time
 # NIR - RED
