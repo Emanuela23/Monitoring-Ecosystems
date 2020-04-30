@@ -115,81 +115,23 @@ plot(diff)
 # resampling
 p224r63_2011res <- aggregate(p224r63_2011, fact=10)
 p224r63_2011res100 <- aggregate(p224r63_2011, fact=100)
+
 par(mfrow=c(3,1))
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011res100p224r63_2011res100, r=4, g=3, b=2, stretch="Lin")
+
+# let's see the resolution of p224r63_2011 -> 30 m
+p224r63_2011
+
+#and the resolution of p224r63_2011res100 -> 3 km
+p224r63_2011res100
 
 
 
-# DVI for the two years: compare with a difference in time
-# NIR - RED
-# NDVI = (NIR - RED) / (NIR - RED)
-
-dvi1988 <- p224r63_1988$B4_sre - p224r63_1988$B3_sre
-dvi2011 <- p224r63_2011$B4_sre - p224r63_2011$B3_sre
-
-par(mfrow=c(2,1))
-plot(dvi1988)
-plot(dvi2011)
-
-
-par(mfrow=c(2,1))
-cldvi <- colorRampPalette(c('red','orange','yellow'))(100) # 
-plot(dvi1988, col=cldvi)
-plot(dvi2011, col=cldvi)
-
-
-# difference in time
-difdvi <- dvi2011 - dvi1988
-cldif <- colorRampPalette(c('blue','white','red'))(100) #
-plot(difdvi, col=cldif)
 
 
 
-# install.packages("RStoolbox")
-library(RStoolbox)
-
-# PCA
-p224r63_2011res <- aggregate(p224r63_2011, fact=10)
-
-par(mfrow=c(2,1))
-plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
-plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="Lin")
-
-p224r63_2011_pca <- rasterPCA(p224r63_2011res)
-
-summary(p224r63_2011_pca$model) 
-plotRGB(p224r63_2011_pca$map, r=4, g=3, b=2, stretch="Lin")
-
-plot(p224r63_2011_pca$map)
-
-# land cover
-p224r63_2011c <- unsuperClass(p224r63_2011, nClasses=5)
-clclass <- colorRampPalette(c('red', 'green', 'yellow', 'blue', 'black'))(100) 
-plot(p224r63_2011c$map, col=clclass)
-
-
-
-################
-setwd("C:/lab/")
-
-load("rs.RData")
-ls()
-
-p224r63_1988_masked
-
-p224r63_1988 <- brick("p224r63_1988_masked.grd") 
-
-# Exercise: plot in visible RGB 321 both images
-
-# B1: blue
-# B2: green
-# B3: red
-# B4: NIR
-
-par(nfor=c(2,1))
-
-plotRGB(p224r63, r=3, g=2, b=1, stretch="lin")
 
 
 
