@@ -1,13 +1,13 @@
 ### Multi panel in R: the second lecture of Monitoring ecosystem 
 
 install.packages("sp")
-install.packages("GGally")
+install.packages("GGally") #The R package 'ggplot2' is a plotting system based on the grammar of graphics. 'GGally' extends 'ggplot2' by adding several functions to reduce the complexity of combining geometric objects with transformed data. Some of these functions include a pairwise plot matrix, a two group pairwise plot matrix, a parallel coordinates plot, a survival plot, and several functions to plot networks.
+#Ggally is used for the function ggpairs()
 
 library(sp) # require(sp) will also do the job
 library(GGally)
 
-data(meuse) # there is a data set available named meuse
-
+data(meuse) 
 attach(meuse)
 
 # Exercise: see the name of the variables and plot cadmium versus zinc
@@ -34,6 +34,6 @@ pairs(meuse[,3:6])
 pairs(meuse[,3:6],col="purple",cex=2,pch=13)
 
 #GGally package will prettify the graph
-ggpairs(meuse[,3:6]
+ggpairs(meuse[,3:6])
 
 
