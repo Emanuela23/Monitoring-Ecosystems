@@ -1,12 +1,15 @@
 # R code for multivariate analysis 
 
-setwd("C:/lab/")
+setwd("C:/lab/") #specify the path to the desired folder of your working directory
 
 install.packages("vegan")
 library(vegan)
 
-biomes <- read.table("biomes.csv", head=T, sep=",")
-head(biomes) # View(biomes). biomes
+biomes <- read.table("biomes.csv", head=T, sep=",") 
+#head=T or F:a logical value indicating whether the file contains the names of the variables as its first line. If missing, the value is determined from the file format: head is set to TRUE if and only if the first row contains one fewer field than the number of columns.
+#sep=",": values on each line of the file are separated by the character ,
+
+head(biomes) # View(biomes), biomes
 
 # DEtrended CORrespondence ANAlysis (decorana)
 multivar <- decorana(biomes)
