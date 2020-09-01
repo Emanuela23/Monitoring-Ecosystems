@@ -2,6 +2,7 @@ install.packages("sp") #Classes and methods for spatial data; the classes docume
 
 library(sp) #loads the package
 data(meuse) #loads specified data sets, or list the available data sets.
+# there is a data set available named meuse
 
 # Let's see how the meuse dataset is structured:
 meuse
