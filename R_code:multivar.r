@@ -2,7 +2,8 @@
 
 setwd("C:/lab/") #specify the path to the desired folder of your working directory
 
-install.packages("vegan")
+install.packages("vegan") #The vegan package provides tools for descriptive community ecology. It has most basic functions of diversity analysis, community ordination and dissimilarity analysis. Most of its multivariate tools can be used for other data types as well.
+
 library(vegan)
 
 biomes <- read.table("biomes.csv", head=T, sep=",") 
