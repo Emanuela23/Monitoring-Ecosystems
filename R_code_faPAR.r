@@ -1,12 +1,17 @@
 # R_code_faPAR.r
 # How to look at chemical cycling from satellites
 
-# t(copNDVI)
+# levelplot(copNDVI)
 #
 # setwd("C:/Downloads/")
 #
-#..?
+# faPAR <- raster("~/Downloads/c_gls_FAPAR300-RT0_202004200000_GLOBE_PROBAV_V1.0.1.nc")
 #
+# plot(faPAR)
+#
+# faPAR10 <- aggregate(faPAR, fact=10)
+
+# install.packages("raster")
 
 setwd("C:/lab/")
 library(raster)
