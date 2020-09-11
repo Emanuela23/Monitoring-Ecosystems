@@ -2,8 +2,8 @@
 
 setwd("C:/lab/")
 
-# install.packages("raster")
-install.packages("RStoolbox")
+# install.packages("raster") #Reading, writing, manipulating, analyzing and modeling of spatial data. The package implements basic and high-level functions for raster data and for vector data operations such as intersections.
+install.packages("RStoolbox") #Toolbox for remote sensing image processing and analysis such as calculating spectral indices, principal component transformation, unsupervised and supervised classification or fractional cover analyses.
 
 # let's install faster 
 # install.packages(c("raster","RStoolbox"))
