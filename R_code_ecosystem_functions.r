@@ -5,8 +5,8 @@
 # chemical cycling
 # proxies
 
-install.packages("rasterdiv")
-install.packages("rasterVis")
+install.packages("rasterdiv") #Providing functions to calculate indices of diversity on numerical matrices based on information theory
+install.packages("rasterVis") #Methods for enhanced visualization and interaction with raster data. It implements visualization methods for quantitative data and categorical data, both for univariate and multivariate rasters. It also provides methods to display spatiotemporal rasters, and vector fields
 
 library(rasterVis)
 library(rasterdiv)
@@ -14,16 +14,18 @@ library(rasterdiv)
 data(copNDVI)
 plot(copNDVI)
 
-copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
+copNDVI <- reclassify(copNDVI, cbind(253:255, NA)) #Reclassify values of a Raster* object. The function (re)classifies groups of values to other values. For example, all values between 1 and 10 become 1, and all values between 11 and 15 become 2
+#cbind:Take a sequence of vector, matrix or data-frame arguments and combine by columns or rows, respectively.
+
 levelplot(copNDVI)
 
-copNDVI10 <- aggregate(copNDVI, fact=10)
+copNDVI10 <- aggregate(copNDVI, fact=10) #Splits the data into subsets, computes summary statistics for each, and returns the result in a convenient form
 levelplot(copNDVI10)
 
 copNDVI100 <- aggregate(copNDVI, fact=100)
 levelplot(copNDVI100)
 
-######## gift
+##################################### gift
 #library(ggplot2)
 
 #myPalette <- colorRampPalette(c('white','green','dark green'))
@@ -74,12 +76,14 @@ plot(dvi1, col=cl)
 plot(dvi2, col=cl)
 
 difdvi <- dvi1 - dvi2
+### Warning in dvi1 - dvi2: Raster objects have different extents. Result for their intersection is returned
 
-dev.off()
+dev.off() #This function closes the specified plot (by default the current device) 
+
 cld <- colorRampPalette(c('blue','white','red'))(100) 
 plot(difdvi, col=cld)
 
-hist(difdvi)
+hist(difdvi) #The generic function hist computes a histogram of the given data values
 
 
 
