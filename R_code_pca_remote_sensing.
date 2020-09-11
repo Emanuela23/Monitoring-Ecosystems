@@ -8,21 +8,22 @@ library(raster)
 library(RStoolbox)
 library(ggplot2)
 
-#now we use the function brick that is use to import the whole image of the satellite. 
+#now we use the function brick that is used to import the whole image of the satellite. 
 p224r63_2011 <- brick("p224r63_2011_masked.grd")
 
 # b1 blue
 # b2 green 
 # b3 red
 # b4 NIR
-# b5 thermal infrared
+# b5 SWIR 
+# b6 thermal infrared
 # b7 SWIR
 # b8 panchromatic
 
 # RGB
 # now we plot the image in the RGB space
-plotRGB(p224r63_2011, r=5, g=4, b=3, stretch="Lin")
-ggRGB(p224r63_2011, 5, 4, 3)
+plotRGB(p224r63_2011, r=5, g=4, b=3, stretch="Lin") #stretch: Provide the desired output range (minv and maxv) and the lower and upper bounds in the original data
+ggRGB(p224r63_2011, 5, 4, 3) #ggRGB: Calculates RGB color composite raster for plotting with ggplot2
 
 # do the same with the 1988 image 
 p224r63_1988 <- brick("p224r63_1988_masked.grd")
@@ -63,12 +64,12 @@ summary(p224r63_1988_pca$model)
 
 pairs(p224r63_1988)
 
-# now we can make a difference between the 1988 and 2011 and then plotting the difference. 
+# now we can make a difference between the 1988 and 2011 and then plot the difference. 
 # we are making the difference of every pixel
 difpca <- p224r63_2011_pca$map - p224r63_1988_pca$map
 plot(difpca)
 
-# since the PC1 contains most of the information we can only plot this one, only 1 layer
+# since the PC1 contains most of the information, we can only plot this one, only 1 layer
 cldif <- colorRampPalette(c('blue','black','yellow'))(100)
 plot(difpca$PC1, col=cldif)
 # we see the areas that have changed most
