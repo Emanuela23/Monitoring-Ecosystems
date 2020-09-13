@@ -1,19 +1,20 @@
 R_code_exam.r
 
 # 1. R code first
-# 2. Multipanel in R 
-# 3. Spatial R 
-# 4. R code for multivariate analysis 
-# 5. R code for Remote sensing analysis 
-# 6. Ecosystem functions in R 
+# 2. R code Multipanel 
+# 3. R code Spatial 
+# 4. R code Point pattern analysis: Density map 
+# 5. R code for multivariate analysis 
+# 6. R code for Remote Sensing analysis 
 # 7. R code PCA Remote Sensing
-# 8. R code radiance
-# 9. faPAR in R 
-# 10. Essential Biodiversity Variables in R 
-# 11. Climate change indicator monitoring - Snow cover from Copernicus in R 
-# 12. Monitoring air pollution (NO2) changes in time in R 
-# 13. Point pattern analysis: Density map in R 
-# 14. Species distribution modelling in R 
+# 8. R code Ecosystem functions 
+# 9. R code Radiance
+# 10. R code faPAR 
+# 11. R code Essential Biodiversity Variables
+# 12. R code Climate change indicator monitoring - Snow cover from Copernicus 
+# 13. R code Monitoring air pollution (NO2) changes in time
+# 14. R code Interpolation 
+# 15. R code Species distribution modelling 
 
 # 1. R code first
 
@@ -41,7 +42,7 @@ plot(zinc,copper,col="green",pch=19,cex=2) #cex: dimension of points
 ##########################################################################
 ##########################################################################
 
-### 2. Multi panel in R
+# 2. R code Multipanel 
 
 ### Seeing correlation among ecological variables
 
@@ -85,7 +86,7 @@ ggpairs(meuse[,3:6])
 ###########################################################
 ###########################################################
 
-# 3. Spatial R
+# 3. R code Spatial
 
 # R code for spatial view of points
 
@@ -183,7 +184,152 @@ ggplot(covid, aes(x=lon, y=lat, size=cases)) + geom_point() #size to show the po
 ###############################################################
 ###############################################################
 
-# 4. R code for multivariate analysis 
+# 4. R code Point pattern analysis: Density map 
+
+install.packages("spatstat") #toolbox for analysing Spatial Point Patterns
+library(spatstat)
+
+attach(covid)
+head(covid)
+
+covids <- ppp(lon, lat, c(-180,180), c(-90,90)) #creates a point pattern dataset in the two-dimensional plane
+
+# duccio <- c(12,34,55,77,88,89) cluster all together
+
+#without attaching the covid set
+#covids <- ppp(covid$lon, covid$lat, c(-180,180), c(-90,90))
+
+#build the density map
+d <- density(covids)
+
+plot(d)
+points(covids)
+
+#----
+
+setwd("C:/lab/")
+load("spatial.RData")
+ls()
+
+# covids: point pattern 
+# d: density map
+library(spatstat)
+
+plot(d)
+points(covids)
+
+# let's see where the points are located - let's add the coastlines 
+
+install.packages("rgdal") #Provides bindings to the 'Geospatial' Data Abstraction Library 
+library("rgdal") 
+
+# let's input vector lines (x0y0, x1y1, x2,y2..)
+coastlines <- readOGR("ne_10m_coastline.shp") #reads an OGR data source and layer into a suitable Spatial vector object
+
+# let's add the lines to the previous image
+plot(coastlines, add=T)
+
+# change the color and make the map beautiful 
+
+cl <- colorRampPalette(c("yellow", "orange", "red")) (100)
+# cl <- colorRampPalette(c('yellow', 'orange', 'red'))(100) #
+# 100: all colors from yellow to red (red for the hotspots)
+
+plot(d, col=cl) # cl: is the colorRampPalette
+points(covids)
+plot(coastlines, add=T) 
+
+# Exercise: new colorRampPalette
+
+cl <- colorRampPalette(c("blue","green","yellow")) (100)
+plot(d, col=cl, main="Densities of covid-19") 
+points(covids)
+plot(coastlines, add=T)
+
+# example of prof: 
+# clr <- colorRampPalette(c("light green", "yellow", "orange", "violet")) (100)
+
+# export
+pdf("covid_density.pdf")
+cl <- colorRampPalette(c("blue","green","yellow")) (100)
+plot(d, col=cl, main="Densities of covid-19") 
+points(covids)
+plot(coastlines, add=T)
+dev.off()
+
+# export png
+png("covid_density.png")
+clr <- colorRampPalette(c("light green", "yellow","orange","violet")) (100)
+plot(d, col=clr, main="Densities of covid-19")
+points(covids)
+plot(coastlines, add=T)
+dev.off()
+
+#Species distribution modelling
+
+#no setwd: all the data are based directly on the library 
+
+install.packages("sdm") #extensible framework for developing species distribution models using individual and community-based approaches, generate ensembles of models, evaluate the models, and predict species potential distributions in space and time
+
+library(sdm)
+library(raster) #ecological variables: predictors for species distribution
+library(rgdal) #import vector layers like species data
+
+file <- system.file("external/species.shp", package="sdm")
+species <- shapefile(file)
+
+plot(species)
+species
+species$Occurrence
+
+plot(species[species$Occurrence == 1,],col='blue',pch=16) #the quadratic parenthesis puts a condition and in this case "equal" is == and comma is put when the condition is finished
+
+#add to the existing plot the absences
+points(species[species$Occurrence == 0,],col='red',pch=16) 
+
+# predictors
+path <- system.file("external", package="sdm")
+
+lst <- list.files(path=path,pattern='asc$',full.names = T) # 
+#asc is a type of file, an extension, called also ascii
+lst
+
+preds <- stack(lst)
+plot(preds)
+
+cl <- colorRampPalette(c('blue','orange','red','yellow')) (100)
+plot(preds, col=cl)
+
+plot(preds$elevation, col=cl)
+points(species[species$Occurrence == 1,], pch=16)
+
+plot(preds$temperature, col=cl)
+points(species[species$Occurrence == 1,], pch=16)
+
+plot(preds$precipitation, col=cl)
+points(species[species$Occurrence == 1,], pch=16)
+
+plot(preds$vegetation, col=cl)
+points(species[species$Occurrence == 1,], pch=16)
+
+# model
+d <- sdmData(train=species, predictors=preds)
+
+m1 <- sdm(Occurrence ~ elevation + precipitation + temperature + vegetation, data=d, methods = "glm")
+
+p1 <- predict(m1, newdata=preds)
+
+plot(p1, col=cl)
+points(species[species$Occurrence == 1,], pch=16)
+
+s1 <- stack(preds,p1)
+plot(s1, col=cl)
+
+####################################################
+####################################################
+####################################################
+
+# 5. R code for multivariate analysis 
 
 setwd("C:/lab/") #specify the path to the desired folder of your working directory
 
@@ -220,7 +366,7 @@ ordispider(multivar, type, col=1:4, label = T)
 ##############################################################
 ##############################################################
 
-# 5. R code for Remote sensing analysis 
+# 6. R code for Remote Sensing analysis 
 
 setwd("C:/lab/")
 
@@ -528,8 +674,102 @@ cldif <- colorRamppalette(c("blue", "black", "yellow")) (100)
 #####################################################################
 #####################################################################
 
-# 8. R code radiance
+# 8. R code Ecosystem functions 
 
+setwd("C:/lab/")
+library(raster)
+
+snt <- brick("snt_r10.tif")
+snt
+
+plot(snt)
+
+# B1 blue
+# B2 green
+# B3 red
+# B4 NIR
+
+# R3 G2 B1
+plotRGB(snt, 3, 2, 1, stretch="Lin")
+
+plotRGB(snt, 4, 3, 2, stretch="Lin")
+pairs(snt)
+
+# PCA analysis
+library(RStoolbox)
+
+sntpca <- rasterPCA(snt)
+sntpca
+
+summary(sntpca$model)
+# 70% of information
+plot(sntpca$map)
+
+plotRGB(sntpca$map, 1, 2, 3, stretch="lin")
+
+# set the moving window - diversity measurement
+window <- matrix(1, nrow = 5, ncol = 5)
+window
+
+# focal function - calculation in a certain extent 
+sd_snt <- focal(sntpca$map$PC1, w=window, fun=sd)
+cl <- colorRampPalette(c('dark blue','green','orange','red'))(100)
+plot(sd_snt, col=cl)
+
+par(mfrow=c(1,2))
+plotRGB(snt, 4, 3, 2, stretch="Lin", main= "original image")
+plot(sd_snt, col=cl, main="diversity")
+
+################################# day 2 Cladonia example
+
+setwd("C:/lab/")
+library(raster)
+
+clad <- brick("cladonia_stellaris_calaita.JPG")
+
+plotRGB(clad, 1,2,3, stretch="lin")
+ 
+window <- matrix(1, nrow = 3, ncol = 3)
+window
+
+### PCA analysis 
+cladpca <- rasterPCA(clad)
+
+cladpca
+
+summary(cladpca$model)
+# 98% Comp 1 (because it's a visible spectrum)
+
+ plotRGB(cladpca$map, 1, 2, 3, stretch="lin")
+
+# set the moving window 
+window <- matrix(1, nrow = 5, ncol = 5)
+window
+
+sd_clad <- focal(cladpca$map$PC1, w=window, fun=sd)
+
+PC1_agg <- aggregate(cladpca$map$PC1, fact=10)
+sd_clad_agg <- focal(PC1_agg, w=window, fun=sd)
+
+par(mfrow=c(1,2))
+cl <- colorRampPalette(c('yellow','violet','black'))(100) #
+plot(sd_clad, col=cl)
+plot(sd_clad_agg, col=cl)
+# graph left: original cladonia set - graph righ: aggregated set 
+
+# plot the calculation 
+par(mfrow=c(1,2))
+cl <- colorRampPalette(c('yellow','violet','black'))(100) #
+plotRGB(clad, 1,2,3, stretch="lin")
+plot(sd_clad, col=cl)
+# plot(sd_clad_agg, col=cl)
+
+#############################################################
+#############################################################
+#############################################################
+
+# 9. R code Radiance
+ 
 library(raster)
 
 toy <- raster(ncol=2, nrow=2, xmn=1, xmx=2, ymn=1, ymx=2)
@@ -584,7 +824,7 @@ copNDVI # values : 0, 255  (min, max) # they are using 8 bits
 ###########################################################
 ###########################################################
 
-# 9. faPAR in R 
+# 10. R code faPAR 
 
 # How to look at chemical cycling from satellites
 
@@ -694,7 +934,7 @@ abline(model2, col="red")
 ######################################################################
 ######################################################################
 
-# 10. Essential Biodiversity Variables in R 
+# 11. R code Essential Biodiversity Variables
 
 setwd("C:/lab/")
 library(raster)
@@ -788,7 +1028,7 @@ plot(sd_clad, col=cl)
 ########################################################################
 ########################################################################
  
-# 11. Snow cover from Copernicus in R 
+# 12. R code Climate change indicator monitoring - Snow cover from Copernicus 
 
 setwd("C:/lab/")
 library(raster)
@@ -890,7 +1130,7 @@ dev.off()
 ###########################################################
 ###########################################################
 
-# 12. Monitoring air pollution (NO2) changes in time in R 
+# 13. R code Monitoring air pollution (NO2) changes in time
 
 setwd("C:/lab/NO2/")
 library(raster)
@@ -946,152 +1186,56 @@ abline(0,1, col=red)
 #################################################################
 #################################################################
 
-# 13. Point pattern analysis: Density map in R 
+# 14. R code Interpolation
 
-install.packages("spatstat") #toolbox for analysing Spatial Point Patterns
-library(spatstat)
-
-attach(covid)
-head(covid)
-
-covids <- ppp(lon, lat, c(-180,180), c(-90,90)) #creates a point pattern dataset in the two-dimensional plane
-
-# duccio <- c(12,34,55,77,88,89) cluster all together
-
-#without attaching the covid set
-#covids <- ppp(covid$lon, covid$lat, c(-180,180), c(-90,90))
-
-#build the density map
-d <- density(covids)
-
-plot(d)
-points(covids)
-
-#----
-
+## Interpolation: spatstat library
 setwd("C:/lab/")
-load("spatial.RData")
-ls()
 
-# covids: point pattern 
-# d: density map
+# library(dbmss)
 library(spatstat)
 
-plot(d)
-points(covids)
+# Beech forests Martina
+inp <- read.table("dati_plot55_LAST3.csv", sep=";", head=T)
+attach(inp)
+plot(X,Y)
 
-# let's see where the points are located - let's add the coastlines 
+inppp <- ppp(x=X,y=Y,c(716000,718000),c(4859000,4861000))
+marks(inppp) <- Canopy.cov
+canopy <- Smooth(inppp)
 
-install.packages("rgdal") #Provides bindings to the 'Geospatial' Data Abstraction Library 
-library("rgdal") 
+plot(canopy)
 
-# let's input vector lines (x0y0, x1y1, x2,y2..)
-coastlines <- readOGR("ne_10m_coastline.shp") #reads an OGR data source and layer into a suitable Spatial vector object
+marks(inppp) <- cop.lich.mean
+lichs <- Smooth(inppp)
+plot(lichs)
+points(inppp)
 
-# let's add the lines to the previous image
-plot(coastlines, add=T)
+par(mfrow=c(1,2))
+plot(canopy)
+points(inppp)
+plot(lichs)
+points(inppp)
 
-# change the color and make the map beautiful 
+#########
+# Dati psammofile Giacomo
+inp.psam <- read.table("dati_psammofile.csv", sep=";", head=T)
+attach(inp.psam)
+summary(inp.psam)
 
-cl <- colorRampPalette(c("yellow", "orange", "red")) (100)
-# cl <- colorRampPalette(c('yellow', 'orange', 'red'))(100) #
-# 100: all colors from yellow to red (red for the hotspots)
+plot(E,N)
+inp.psam.ppp <- ppp(x=E,y=N,c(356450,372240),c(5059800,5064150))
 
-plot(d, col=cl) # cl: is the colorRampPalette
-points(covids)
-plot(coastlines, add=T) 
+marks(inp.psam.ppp) <- C_org
+C <- Smooth(inp.psam.ppp)
 
-# Exercise: new colorRampPalette
-
-cl <- colorRampPalette(c("blue","green","yellow")) (100)
-plot(d, col=cl, main="Densities of covid-19") 
-points(covids)
-plot(coastlines, add=T)
-
-# example of prof: 
-# clr <- colorRampPalette(c("light green", "yellow", "orange", "violet")) (100)
-
-# export
-pdf("covid_density.pdf")
-cl <- colorRampPalette(c("blue","green","yellow")) (100)
-plot(d, col=cl, main="Densities of covid-19") 
-points(covids)
-plot(coastlines, add=T)
-dev.off()
-
-# export png
-png("covid_density.png")
-clr <- colorRampPalette(c("light green", "yellow","orange","violet")) (100)
-plot(d, col=clr, main="Densities of covid-19")
-points(covids)
-plot(coastlines, add=T)
-dev.off()
-
-#Species distribution modelling
-
-#no setwd: all the data are based directly on the library 
-
-install.packages("sdm") #extensible framework for developing species distribution models using individual and community-based approaches, generate ensembles of models, evaluate the models, and predict species potential distributions in space and time
-
-library(sdm)
-library(raster) #ecological variables: predictors for species distribution
-library(rgdal) #import vector layers like species data
-
-file <- system.file("external/species.shp", package="sdm")
-species <- shapefile(file)
-
-plot(species)
-species
-species$Occurrence
-
-plot(species[species$Occurrence == 1,],col='blue',pch=16) #the quadratic parenthesis puts a condition and in this case "equal" is == and comma is put when the condition is finished
-
-#add to the existing plot the absences
-points(species[species$Occurrence == 0,],col='red',pch=16) 
-
-# predictors
-path <- system.file("external", package="sdm")
-
-lst <- list.files(path=path,pattern='asc$',full.names = T) # 
-#asc is a type of file, an extension, called also ascii
-lst
-
-preds <- stack(lst)
-plot(preds)
-
-cl <- colorRampPalette(c('blue','orange','red','yellow')) (100)
-plot(preds, col=cl)
-
-plot(preds$elevation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-plot(preds$temperature, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-plot(preds$precipitation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-plot(preds$vegetation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-# model
-d <- sdmData(train=species, predictors=preds)
-
-m1 <- sdm(Occurrence ~ elevation + precipitation + temperature + vegetation, data=d, methods = "glm")
-
-p1 <- predict(m1, newdata=preds)
-
-plot(p1, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-s1 <- stack(preds,p1)
-plot(s1, col=cl)
+plot(C)
+points(inp.psam.ppp)
 
 #########################################################
 #########################################################
 #########################################################
 
-# 14. Species distribution modelling in R 
+# 15. R code Species distribution modelling 
 
 #no setwd: all the data are based directly on the library 
 
