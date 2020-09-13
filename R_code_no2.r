@@ -4,6 +4,7 @@ setwd("C:/lab/NO2/")
 library(raster)
 
 rlist <- list.files(pattern="EN")
+rlist
 import <- lapply(rlist, raster)
 
 EN <- stack(import)
