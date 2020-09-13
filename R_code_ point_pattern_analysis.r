@@ -1,13 +1,12 @@
 # Point pattern analysis: Density map
 
-install.packages("spatstat")
+install.packages("spatstat") #toolbox for analysing Spatial Point Patterns
 library(spatstat)
 
 attach(covid)
 head(covid)
 
-covids <- ppp(lon, lat, c(-180,180), c(-90,90))
-#?ppp put ? to understand 
+covids <- ppp(lon, lat, c(-180,180), c(-90,90)) #creates a point pattern dataset in the two-dimensional plane
 
 # duccio <- c(12,34,55,77,88,89) cluster all together
 
@@ -35,11 +34,11 @@ points(covids)
 
 # let's see where the points are located - let's add the coastlines 
 
-install.packages("rgdal")
+install.packages("rgdal") #Provides bindings to the 'Geospatial' Data Abstraction Library 
 library("rgdal") 
 
 # let's input vector lines (x0y0, x1y1, x2,y2..)
-coastlines <- readOGR("ne_10m_coastline.shp")
+coastlines <- readOGR("ne_10m_coastline.shp") #reads an OGR data source and layer into a suitable Spatial vector object
 
 # let's add the lines to the previous image
 plot(coastlines, add=T)
