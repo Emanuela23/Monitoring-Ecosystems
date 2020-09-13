@@ -67,6 +67,8 @@ summary(cladpca$model)
  plotRGB(cladpca$map, 1, 2, 3, stretch="lin")
 
 # set the moving window 
+window <- matrix(1, nrow = 5, ncol = 5)
+window
 
 sd_clad <- focal(cladpca$map$PC1, w=window, fun=sd)
 
