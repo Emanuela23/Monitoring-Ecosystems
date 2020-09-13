@@ -5,7 +5,7 @@
 #
 # setwd("C:/Downloads/")
 #
-# faPAR <- raster("~/Downloads/c_gls_FAPAR300-RT0_202004200000_GLOBE_PROBAV_V1.0.1.nc")
+# faPAR <- raster("C:/Downloads/c_gls_FAPAR300-RT0_202004200000_GLOBE_PROBAV_V1.0.1.nc")
 #
 # plot(faPAR)
 #
@@ -34,12 +34,12 @@ pdf("faPAR10.pdf")
 levelplot(faPAR10)
 dev.off()
 
-################################
+################################ day 2
 
 setwd("C:/lab/")
 
 load("faPAR.RData")
-ls()
+ls() #When invoked with no argument at the top level prompt, ls shows what data sets and functions a user has defined. When invoked with no argument inside a function, ls returns the names of the functions local variables.
 
 library(raster)
 library(rasterdiv)
@@ -65,11 +65,11 @@ hm <- c(30, 100, 150, 200, 260, 340, 460, 600) #amount of heavy metals in ppm
 
 plot(erosion, hm, col="red", pch=19, xlab="erosion", ylab="heavy metals")
 
-model1 <- lm(hm ~ erosion)
+model1 <- lm(hm ~ erosion) #lm is used to fit linear models
 summary(model1)
-abline(model1)
+abline(model1) #adds one or more straight lines through the current plot
 
-#######
+############ faPAR vs. NDVI model 
 setwd("C:/lab/")
 library(raster)
 library(rasterdiv)
@@ -87,17 +87,19 @@ library(sf) # to call st_* functions
 random.points <- function(x,n)
 {
 lin <- rasterToContour(is.na(x))
-pol <- as(st_union(st_polygonize(st_as_sf(lin))), 'Spatial') # st_union to dissolve geometries
-pts <- spsample(pol[1,], n, type = 'random')
+pol <- as(st_union(st_polygonize(st_as_sf(lin))), 'Spatial') #as manages the relations that allow coercing an object to a given class 
+# st_union to dissolve geometries
+pts <- spsample(pol[1,], n, type = 'random') #spsample sample point locations within a square area, a grid, a polygon, or on a spatial line
 }
 
 plot(faPAR10)
 pts <- random.points(faPAR10,1000)
-copNDVIp <- extract(copNDVI, pts)
+copNDVIp <- extract(copNDVI, pts) #Extract values from a Raster* object at the locations of other spatial data.
 faPAR10p <- extract(faPAR10, pts)
 
 # photosynthesis vs. biomass
 model2 <- lm(faPAR10p ~ copNDVIp)
+summary(model2)
 plot(copNDVIp, faPAR10p, col="green", xlab="biomass", ylab="photosynthesis")
 abline(model2, col="red")
 
