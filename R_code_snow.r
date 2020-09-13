@@ -37,6 +37,8 @@ plot(snow2020, col=cl)
 rlist <- list.files(pattern="snow")
 rlist
 
+### [1] "snow2000r.tif" "snow2005r.tif" "snow2010r.tif" "snow2015r.tif" "snow2020r.tif"
+
 #lapply function imports all of the raster
 import <- lapply(rlist, raster)
 
@@ -61,6 +63,8 @@ library(raster)
 
 rlist <- list.files(pattern="snow")
 rlist
+
+## [1] "snow2000r.tif" "snow2005r.tif" "snow2010r.tif" "snow2015r.tif" "snow2020r.tif"
 
 import <- lapply(rlist, raster)
 snow.multitemp <- stack(import)
@@ -87,6 +91,7 @@ pdf("my_final_exciting_graph.pdf")
 plot(final.stack, col=cl)
 dev.off()
 
+# export 2
 png("my_final_exciting_graph.png")
 plot(final.stack, col=cl)
 dev.off()
