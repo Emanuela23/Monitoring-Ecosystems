@@ -21,7 +21,7 @@ R_code_exam.r
 install.packages("sp") #Classes and methods for spatial data; the classes document where the spatial location information resides, for 2D or 3D data. Utility functions are provided, e.g. for plotting data as maps, spatial selection, as well as methods for retrieving coordinates, for subsetting, print, summary, etc.
 
 library(sp) #loads the package
-data(meuse) #loads specified data sets, or list the available data sets.
+data(meuse) #loads specified data sets, or list the available data sets
 # there is a data set available named meuse
 
 # Let's see how the meuse dataset is structured:
@@ -31,7 +31,8 @@ meuse
 head(meuse)
 
 # let's plot two variables
-# let's see if the zin concentration is related to that of copper
+# let's see if the zinc
+concentration is related to that of copper
 attach(meuse) #the database is attached to the R search path. This means that the database is searched by R when evaluating a variable, so objects in the database can be accessed by simply giving their names.
 plot(zinc,copper)
 plot(zinc,copper,col="green")
@@ -103,10 +104,9 @@ coordinates(meuse)=~x+y    #alt+126
 
 plot(meuse)
 
-spplot(meuse,"zinc")
+spplot(meuse,"zinc") #Lattice (trellis) plot methods for spatial data with attributes
 
 # Exercise: plot the spatial amount of copper
-
 spplot(meuse, "copper")
 
 # change the title
@@ -162,6 +162,7 @@ library(ggplot2) # require(ggplot2)
 # setting the working directory: lab 
 setwd("C:/lab/")
 load("spatial.RData")
+
 # let's see if the file was uploaded correctly, ls is a list of objects
 ls()
 # covid
@@ -173,7 +174,7 @@ head(mpg)
 #key components: data, aes, geometry 
 ggplot(mpg, aes(x=displ, y=hwy)) + geom_point()
 
-# change the geom
+# change the geometry
 ggplot(mpg, aes(x=displ, y=hwy)) + geom_line()
 ggplot(mpg, aes(x=displ, y=hwy)) + geom_polygon()
 
@@ -192,7 +193,8 @@ library(spatstat)
 attach(covid)
 head(covid)
 
-covids <- ppp(lon, lat, c(-180,180), c(-90,90)) #creates a point pattern dataset in the two-dimensional plane
+# Create a point pattern dataset in the two-dimensional plane
+covids <- ppp(lon, lat, c(-180,180), c(-90,90)) 
 
 # duccio <- c(12,34,55,77,88,89) cluster all together
 
@@ -203,6 +205,8 @@ covids <- ppp(lon, lat, c(-180,180), c(-90,90)) #creates a point pattern dataset
 d <- density(covids)
 
 plot(d)
+
+# add points to a plot
 points(covids)
 
 #----
@@ -249,12 +253,14 @@ plot(coastlines, add=T)
 # example of prof: 
 # clr <- colorRampPalette(c("light green", "yellow", "orange", "violet")) (100)
 
-# export
+# export PDF
 pdf("covid_density.pdf")
 cl <- colorRampPalette(c("blue","green","yellow")) (100)
 plot(d, col=cl, main="Densities of covid-19") 
 points(covids)
 plot(coastlines, add=T)
+
+# close the specified plot
 dev.off()
 
 # export png
@@ -264,66 +270,6 @@ plot(d, col=clr, main="Densities of covid-19")
 points(covids)
 plot(coastlines, add=T)
 dev.off()
-
-#Species distribution modelling
-
-#no setwd: all the data are based directly on the library 
-
-install.packages("sdm") #extensible framework for developing species distribution models using individual and community-based approaches, generate ensembles of models, evaluate the models, and predict species potential distributions in space and time
-
-library(sdm)
-library(raster) #ecological variables: predictors for species distribution
-library(rgdal) #import vector layers like species data
-
-file <- system.file("external/species.shp", package="sdm")
-species <- shapefile(file)
-
-plot(species)
-species
-species$Occurrence
-
-plot(species[species$Occurrence == 1,],col='blue',pch=16) #the quadratic parenthesis puts a condition and in this case "equal" is == and comma is put when the condition is finished
-
-#add to the existing plot the absences
-points(species[species$Occurrence == 0,],col='red',pch=16) 
-
-# predictors
-path <- system.file("external", package="sdm")
-
-lst <- list.files(path=path,pattern='asc$',full.names = T) # 
-#asc is a type of file, an extension, called also ascii
-lst
-
-preds <- stack(lst)
-plot(preds)
-
-cl <- colorRampPalette(c('blue','orange','red','yellow')) (100)
-plot(preds, col=cl)
-
-plot(preds$elevation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-plot(preds$temperature, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-plot(preds$precipitation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-plot(preds$vegetation, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-# model
-d <- sdmData(train=species, predictors=preds)
-
-m1 <- sdm(Occurrence ~ elevation + precipitation + temperature + vegetation, data=d, methods = "glm")
-
-p1 <- predict(m1, newdata=preds)
-
-plot(p1, col=cl)
-points(species[species$Occurrence == 1,], pch=16)
-
-s1 <- stack(preds,p1)
-plot(s1, col=cl)
 
 ####################################################
 ####################################################
@@ -356,10 +302,12 @@ biomes_types <- read.table("biomes_types.csv", head=T, sep=",")
 head(biomes_types)
 
 attach(biomes_types)
+
 # ordiellipse: elipse connecting all the points
-ordiellipse(multivar, type, col=1:4, kind="ehull", lwd=3)
+ordiellipse(multivar, type, col=1:4, kind="ehull", lwd=3) #lwd: line width 
 # col=c("green", "blue","red", "black")
 
+#points connected in a spider shape
 ordispider(multivar, type, col=1:4, label = T)
 
 ##############################################################
@@ -378,7 +326,7 @@ install.packages("RStoolbox") #Toolbox for remote sensing image processing and a
 
 library(raster)
 
-# import image
+# import image and create a multi-layer raster object
 p224r63_2011 <- brick("p224r63_2011_masked.grd")
 
 plot(p224r63_2011)
