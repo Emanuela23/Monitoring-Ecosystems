@@ -18,7 +18,7 @@ R_code_exam.r
 
 # 1. R code first
 
-install.packages("sp") #Classes and methods for spatial data; the classes document where the spatial location information resides, for 2D or 3D data. Utility functions are provided, e.g. for plotting data as maps, spatial selection, as well as methods for retrieving coordinates, for subsetting, print, summary, etc.
+install.packages("sp") #Classes and methods for spatial data;
 
 library(sp) #loads the package
 data(meuse) #loads specified data sets, or list the available data sets
@@ -33,7 +33,7 @@ head(meuse)
 # let's plot two variables
 # let's see if the zinc
 concentration is related to that of copper
-attach(meuse) #the database is attached to the R search path. This means that the database is searched by R when evaluating a variable, so objects in the database can be accessed by simply giving their names.
+attach(meuse) #the database is attached to the R search path. Objects in the database can be accessed by simply giving their names.
 plot(zinc,copper)
 plot(zinc,copper,col="green")
 plot(zinc,copper,col="green",pch=19) #pch: different point symbols
@@ -48,7 +48,9 @@ plot(zinc,copper,col="green",pch=19,cex=2) #cex: dimension of points
 ### Seeing correlation among ecological variables
 
 install.packages("sp")
-install.packages("GGally") #The R package 'ggplot2' is a plotting system based on the grammar of graphics. 'GGally' extends 'ggplot2' by adding several functions to reduce the complexity of combining geometric objects with transformed data. Some of these functions include a pairwise plot matrix, a two group pairwise plot matrix, a parallel coordinates plot, a survival plot, and several functions to plot networks.
+install.packages("GGally") #The R package 'ggplot2' is a plotting system based on the grammar of graphics. 
+#'GGally' extends 'ggplot2' by adding several functions to reduce the complexity of combining geometric objects with transformed data. 
+#Some of these functions: pairwise plot matrix, two group pairwise plot matrix, parallel coordinates plot, survival plot, functions to plot networks.
 #Ggally is used for the function ggpairs()
 
 library(sp) # require(sp) will also do the job
@@ -92,11 +94,9 @@ ggpairs(meuse[,3:6])
 # R code for spatial view of points
 
 library(sp)
-
 data(meuse)
 
 # see only some lines
-
 head(meuse)
 
 # coordinates - we are thinking spatially 
@@ -121,7 +121,7 @@ bubble(meuse, "copper",main="Copper concentration", col="red")
 
 ### Importing new data 
 
-# download covid_agg-csv from our teaching site and builds a folder called lab into C:
+# download covid_agg-csv from our teaching site and build a folder called lab into C:
 # put the covid_agg.csv file into the folder lab
 
 # setting the working directory: lab
@@ -137,7 +137,7 @@ head(covid)
 attach(covid) 
 plot(country,cases)
 
-# if you do not attach covid plot(covid$country,covid$cases)
+# if you do not attach covid: plot(covid$country,covid$cases)
 
 #change orientation of the axis to see all the countries - vertical 
 plot(country, cases, las=0)
@@ -171,7 +171,9 @@ library(ggplot2) #require(ggplot2)
 
 data(mpg)
 head(mpg)
-#key components: data, aes, geometry 
+#key components: data, aes , geometry 
+#aes:Aesthetic Mappings That Describe How Variables In The Data Are Mapped
+#geom_point:scatterplot
 ggplot(mpg, aes(x=displ, y=hwy)) + geom_point()
 
 # change the geometry
@@ -194,7 +196,7 @@ attach(covid)
 head(covid)
 
 # Create a point pattern dataset in the two-dimensional plane
-covids <- ppp(lon, lat, c(-180,180), c(-90,90)) 
+covids <- ppp(lon, lat, c(-180,180), c(-90,90)) #c:combine values into a vector or list
 
 # duccio <- c(12,34,55,77,88,89) cluster all together
 
