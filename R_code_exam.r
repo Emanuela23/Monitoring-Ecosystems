@@ -281,12 +281,14 @@ dev.off()
 
 setwd("C:/lab/") #specify the path to the desired folder of your working directory
 
-install.packages("vegan") #The vegan package provides tools for descriptive community ecology. It has most basic functions of diversity analysis, community ordination and dissimilarity analysis. Most of its multivariate tools can be used for other data types as well.
+install.packages("vegan") #The vegan package provides tools for descriptive community ecology.
+#diversity analysis, community ordination and dissimilarity analysis. Most of its multivariate tools can be used for other data types as well.
 
 library(vegan)
 
 biomes <- read.table("biomes.csv", head=T, sep=",") 
-#head=T or F:a logical value indicating whether the file contains the names of the variables as its first line. If missing, the value is determined from the file format: head is set to TRUE if and only if the first row contains one fewer field than the number of columns.
+#head=T or F: indicates whether the file contains the names of the variables as its first line. 
+#If missing, the value is determined from the file format: head is set to TRUE if and only if the first row contains one fewer field than the number of columns.
 #sep=",": values on each line of the file are separated by the character ,
 
 head(biomes) # View(biomes), biomes
@@ -320,8 +322,8 @@ ordispider(multivar, type, col=1:4, label = T)
 
 setwd("C:/lab/")
 
-# install.packages("raster") #Reading, writing, manipulating, analyzing and modeling of spatial data. The package implements basic and high-level functions for raster data and for vector data operations such as intersections.
-install.packages("RStoolbox") #Toolbox for remote sensing image processing and analysis such as calculating spectral indices, principal component transformation, unsupervised and supervised classification or fractional cover analyses.
+# install.packages("raster") #Reading, writing, manipulating, analyzing and modeling of spatial data.
+install.packages("RStoolbox") #Toolbox for remote sensing image processing and analysis
 
 # let's install faster 
 # install.packages(c("raster","RStoolbox"))
@@ -372,7 +374,8 @@ plot(p224r63_2011$B4_sre, col=cln)
 dev.off()
 
 # RGB 
-plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") 
+#stretch: option to stretch the values to increase the contrast of the image: "lin" or "hist"
 
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 
@@ -395,7 +398,7 @@ p224r63_1988 <- brick("p224r63_1988_masked.grd")
 plot(p224r63_1988)
 
 # Exercise: plot in visible RGB 321 both images (1988 and 2011)
-par(mfrow=c(2,1))
+par(mfrow=c(2,1))data
 plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
 
@@ -456,8 +459,8 @@ p224r63_2011res100
 # chemical cycling
 # proxies
 
-install.packages("rasterdiv") #Providing functions to calculate indices of diversity on numerical matrices based on information theory
-install.packages("rasterVis") #Methods for enhanced visualization and interaction with raster data. It implements visualization methods for quantitative data and categorical data, both for univariate and multivariate rasters. It also provides methods to display spatiotemporal rasters, and vector fields
+install.packages("rasterdiv") #calculate indices of diversity 
+install.packages("rasterVis") #enhanced visualization and interaction with raster data, both for univariate and multivariate rasters + methods to display spatiotemporal rasters, and vector fields
 
 library(rasterVis)
 library(rasterdiv)
@@ -465,7 +468,7 @@ library(rasterdiv)
 data(copNDVI)
 plot(copNDVI)
 
-copNDVI <- reclassify(copNDVI, cbind(253:255, NA)) #Reclassify values of a Raster* object. The function (re)classifies groups of values to other values. For example, all values between 1 and 10 become 1, and all values between 11 and 15 become 2
+copNDVI <- reclassify(copNDVI, cbind(253:255, NA)) #(re)classifies groups of values to other values. Ex: all values between 1 and 10 become 1, all values between 11 and 15 become 2
 #cbind:Take a sequence of vector, matrix or data-frame arguments and combine by columns or rows, respectively.
 
 levelplot(copNDVI)
