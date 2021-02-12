@@ -567,7 +567,7 @@ p224r63_2011 <- brick("p224r63_2011_masked.grd")
 
 # RGB
 # now we plot the image in the RGB space
-plotRGB(p224r63_2011, r=5, g=4, b=3, stretch="Lin") #stretch: Provide the desired output range (minv and maxv) and the lower and upper bounds in the original data
+plotRGB(p224r63_2011, r=5, g=4, b=3, stretch="Lin") #stretch: Provides the desired output range (minv and maxv) and the lower and upper bounds in the original data
 ggRGB(p224r63_2011, 5, 4, 3) #ggRGB: Calculates RGB color composite raster for plotting with ggplot2
 
 # do the same with the 1988 image 
@@ -1192,7 +1192,7 @@ points(inp.psam.ppp)
 
 #no setwd: all the data are based directly on the library 
 
-install.packages("sdm") #extensible framework for developing species distribution models using individual and community-based approaches, generate ensembles of models, evaluate the models, and predict species potential distributions in space and time
+install.packages("sdm") #developing species distribution models using individual and community-based approaches, generate ensembles of models, evaluate the models, and predict species potential distributions in space and time
 
 library(sdm)
 library(raster) #ecological variables: predictors for species distribution
