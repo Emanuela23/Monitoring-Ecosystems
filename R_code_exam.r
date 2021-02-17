@@ -1133,7 +1133,7 @@ import <- lapply(rlist, raster)
 snow.multitemp <- stack(import)
  
 plot(snow.multitemp$snow2010r, snow.multitemp$snow2020r)
-abline(0,1, col=red)
+abline(0,1, col="red")
 
 #################################################################
 #################################################################
@@ -1152,7 +1152,7 @@ inp <- read.table("dati_plot55_LAST3.csv", sep=";", head=T)
 attach(inp)
 plot(X,Y)
 
-inppp <- ppp(x=X,y=Y,c(716000,718000),c(4859000,4861000))
+inppp <- ppp(x=X,y=Y,c(716000,718000),c(4859000,4861000)) #ppp:create a point pattern dataset
 marks(inppp) <- Canopy.cov
 canopy <- Smooth(inppp)
 
