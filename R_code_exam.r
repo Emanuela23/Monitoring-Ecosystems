@@ -1393,7 +1393,19 @@ r_brick2000 <- brick(sapply(rlist,raster))
 r_mean2000 <- calc(r_brick2000,mean)
 writeRaster(r_mean2000,"r_mean2008.tif")
 
+#Boxplot mean temperature variation
+setwd("C:/lab/Greenland/Temperature/Surf_Temp_2000_2020/")
+rlist <- list.files(pattern="tif")
+rlist
+import <- lapply(rlist,raster)
 
+T <- stack(import)
+boxplot(T,main="Mean surface temperature 2000-2020")
+
+##all plots were exported as png
+png("boxplot_mean_Temp_2000_2020.png")
+boxplot(T,main="Mean surface temperature 2000-2020")
+dev.off()
 
 
 
