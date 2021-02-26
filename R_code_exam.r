@@ -1253,6 +1253,8 @@ plot(s1, col=cl)
 
 # 16. R code project 
 
+#Greenland monitoring
+
 #Ice sheet melt extent
 setwd("C:/lab/Greenland/")
 library(raster)
