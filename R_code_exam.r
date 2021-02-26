@@ -15,6 +15,8 @@ R_code_exam.r
 # 13. R code Monitoring air pollution (NO2) changes in time
 # 14. R code Interpolation 
 # 15. R code Species distribution modelling 
+# 16. R code project 
+
 
 # 1. R code first
 
@@ -1249,7 +1251,7 @@ s1 <- stack(preds,p1)
 plot(s1, col=cl)
 
 
-# 16. R code exam Greenland monitoring 
+# 16. R code project 
 
 #Ice sheet melt extent
 setwd("C:/lab/Greenland/")
@@ -1294,7 +1296,8 @@ scatter.smooth(x=year,y=Max_Value,cex=0.7,pch=17,col="purple",xlab="Year",ylab="
 text(x=2012, y=1400000, "2012 Heat Wave",col="black", font=1.5, cex=0.7)
 dev.off()
 
-#Albedo
+###Albedo
+
 #let's convert HDF file to TIFF
 setwd("C:/lab/Greenland/Albedo_Greenland/")
 library(gdalUtils)
@@ -1310,6 +1313,91 @@ ext <- c(-0.022,-0.00,0.015,0.025)
 zoom(rast,ext=ext)
 june2000 <- crop(ext=ext)
 writeRaster(june2000,"albedojune2000.tif")
+dev.off()
+
+#Albedo variation during summer (example 2000)
+
+setwd("C:/lab/Greenland/Albedo_Greenland")
+library(raster)
+library(rasterVis)
+
+rlist <- list.files(pattern="albedo")
+rlist
+
+import <- lapply(rlist,raster)
+Al <- stack(import)
+
+cl <- colorRampPalette(c("red","white","blue"))(100)
+
+par(mfrow=c(1,3))
+plot(Al$albedojune2005,col=cl,main="June 2000")
+plot(Al$albedojuly2005,col=cl,main="July 2000")
+plot(Al$albedoaugust2005,col=cl,main="August 2000")
+dev.off()
+
+#boxplot albedo variation 2000 - 2012
+setwd("C:/lab/Greenland/Albedo_Greenland/comparison")
+library(raster)
+library(rasterVis)
+
+rlist <- list.files(pattern="albedo")
+rlist
+import <- lapply(rlist,raster)
+Gr2 <- stack(import)
+boxplot(Gr2,main="Albedo comparison 15 august 2000 - 2012")
+
+#plot albedo difference 2012 - 2000
+dif <- Gr$albedoaugust2012 - Gr2$albedoaugust2000
+cl <- colorRampPalette(c("purple","red","white","blue","black"))(100)
+plot(dif,col=cl,main="Albedo variation 15 august 2012-2000")
+dev.off()
+
+###Land surface temperature
+
+#Download MODIS data in R 
+install.packages("MODIStsp")
+library(MODIStsp)
+MODIStsp()
+
+#choose the dataset, temporal coverage, projection and data format 
+
+#land surface temperature in summer 2000 - 2020
+setwd("C:/lab/Greenland/Temperature/3 months/")
+library(raster)
+library(rasterVis)
+rlist <- list.files(pattern="tif")
+rlist
+import <- lapply(rlist,raster)
+TGr <- stack(import)
+
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+levelplot(TGr,col.regions=cl,main="Summer land surface temperature",names.attr=c("June 2000","July 2000","August 2000","June 2005","July 2005","August 2005","June 2010","July 2010","August 2010","June 2015","July 2015","August 2015","June 2020","July 2020","August 2020"))
+
+#boxplot land surface temperature in july 2000 - 2020
+setwd("C:/lab/Greenland/Temperature/July/")
+library(raster)
+rlist <- list.files(pattern="tif")
+rlist
+import <- lapply(rlist,raster)
+July <- stack(import)
+boxplot(July,outline=F, horizontal=FALSE, axes=T, main="Surface temperature variation july 2000-2020",col="red")
+
+#let's see how the temperature changes during the year from 2000 to 2020
+#let's calculate the mean of every year
+
+#Total mean temperature in a year (ex. 2000) 
+setwd("C:/lab/Greenland/Temperature/Surf_Temp_2000")
+library(raster)
+rlist <- list.files(pattern="tif")
+r_brick2000 <- brick(sapply(rlist,raster))
+r_mean2000 <- calc(r_brick2000,mean)
+writeRaster(r_mean2000,"r_mean2008.tif")
+
+
+
+
+
+
 
 
 
